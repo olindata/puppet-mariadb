@@ -1,0 +1,20 @@
+# Creates an account and database and grant permissions for the database to the account
+
+define mariadb::database($username, $password, $database, $grants = 'all privileges', $grant_to_host = '%', $withgrants = false, $dbserver = 'localhost') {
+  
+  exec { "create-db-${name}-${database}":
+        command => "/usr/bin/mysqladmin create -h${dbserver} -u${::mysql_admin_user} -p${::mysql_admin_pass} ${database}",
+        unless  => "/usr/bin/mysql -h${dbserver} -u${::mysql_admin_user} -p${::mysql_admin_pass} -e'select schema_name from information_schema.schemata where schema_name = \"${database}\";' | grep ${database}"
+    }
+
+  mariadb::user { "grant-mysql-${name}-${database}-${username}":
+    username    => $username, 
+    pw        => $password,
+    dbname      => $database, 
+    grants       => $grants, 
+    host_to_grant   => $grant_to_host, 
+    dbhost       => $dbserver, 
+    withgrants     => $withgrants,
+  }
+}
+

@@ -1,0 +1,24 @@
+{
+  "name": "tribily-mariadb",
+  "author": "Walter Heck",
+  "description": "Only works for debian for now, feel free to contribute other operating systems.\n\nRequires some top-level variables to work for now:\n\nThe credentials to a mysql user that will be able to create other users, databases and grants\n$::mysql_admin_user\t\t\n$::mysql_admin_pass\nThe preferred root password\n$::mysql_root_password\nThe preferred password for the debian-sys-maint user\n$::debian-sys-maint-pass",
+  "license": "GPLv2",
+  "project_page": "",
+  "source": "",
+  "summary": "This module manages mariadb",
+  "version": "1.0",
+  "checksums": {
+    "Modulefile": "2555cb518245c1b2e1d33d1bf3ef2579",
+    "README": "d1895524af06e7382823b6989ca767de",
+    "files/binlog.cnf": "38159cf054807da4f642ff19a13d0505",
+    "files/common.cnf": "cec350efb3e19d36ea134b229305318f",
+    "files/my.cnf": "9ec531268457c651dc60dc64319e9ddc",
+    "files/mysql_repl_status.pl": "b15fba03b44630f086bd8f4af9736ed5",
+    "manifests/client.pp": "06012a97f44401be08054651295c55e8",
+    "manifests/database.pp": "c21dec6f7e968125f81cfb32e9428428",
+    "manifests/server.pp": "377aab82badf899be4ed93bd70dc50ce",
+    "manifests/user.pp": "9ee675c37416e45d9a00481640c1bbd6",
+    "templates/debian.cnf.erb": "189625595f7e90f010fc98845d3d8902"
+  },
+  "dependencies": []
+}

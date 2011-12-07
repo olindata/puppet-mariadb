@@ -1,0 +1,23 @@
+# Grant an existing account permissions to a database
+#
+# Usage: mysql::grant { "dbname": "username" }
+
+define mariadb::user($username, $pw, $dbname, $grants = 'all privileges', $host_to_grant = '%', $dbhost = 'localhost', $withgrants = false) {
+
+    Exec { path => "/bin:/usr/bin" }
+
+  if $withgrants {
+      exec { "create-grant-${name}-${username}-${dbhost}":
+      command => "mysql -h${dbhost} -u${::mysql_admin_user} -p${::mysql_admin_pass} -e 'grant ${grants} on ${dbname}.* to `${username}`@`${host_to_grant}` identified by \"${pw}\" with grant option'",
+      onlyif  => "[ `mysql -h${dbhost} -u${::mysql_admin_user} -p${::mysql_admin_pass} -BN -e 'select count(*) from mysql.db where User=\"${username}\" and Db=\"${dbname}\"'` -eq 0 ]",
+      require => Package['mariadb-client']
+    }
+  } else {
+      exec { "create-grant-${name}-${username}-${dbhost}":
+      command => "mysql -h${dbhost} -u${::mysql_admin_user} -p${::mysql_admin_pass} -e 'grant ${grants} on ${dbname}.* to `${username}`@`${host_to_grant}` identified by \"${pw}\"'",
+      onlyif  => "[ `mysql -h${dbhost} -u${::mysql_admin_user} -p${::mysql_admin_pass} -BN -e 'select count(*) from mysql.db where User=\"${username}\" and Db=\"${dbname}\"'` -eq 0 ]",
+      require => Package['mariadb-client']
+    }
+    }
+}
+
