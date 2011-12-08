@@ -1,0 +1,94 @@
+#!/bin/bash
+
+
+# Configuration 
+#
+# Location for backups
+BACKUP_DIR=<%= scope.lookupvar('mysql-backup-dir') %>
+
+# Number of hourly backups to keep.
+KEEP_HOURLY=24
+
+# Number of daily backups to keep.
+KEEP_DAILY=2
+
+# Hour for full backup (00..23)
+FULL_BACKUP_HOUR=02
+
+# Name for teh archive
+ARCHIVE_BASE_NAME=latest.tar.bz2
+
+# Location of Xtrabackup binary
+BACKUP_BIN=/usr/bin/innobackupex-1.5.1
+
+# Location of mysql data dir
+MYSQL_DATA_DIR=<%= scope.lookupvar('mysql-data-dir') %>
+MYSQL_USER=<%= scope.lookupvar('mysql-backup-user') %>
+MYSQL_PASS=<%= scope.lookupvar('mysql-backup-pass') %>
+
+#
+# No more editing!
+#
+
+# Get the date variables
+year=`/bin/date +%Y`
+month=`/bin/date +%m`
+day=`/bin/date +%d`
+
+# Logfile.
+
+LOGFILE="${BACKUP_DIR}/${year}_${month}_${day}_log.txt";
+echo "logfile: ${LOGFILE}"
+
+# Log Start time
+echo "$(date): START OF SCRIPT" >> $LOGFILE
+
+
+# Lockfile.
+LOCKFILE="${BACKUP_DIR}/backup.lock"
+
+# Test for lock file.
+echo "Test for lock file."
+if [ -e ${LOCKFILE} ] ;then
+  echo "Lockfile ${LOCKFILE} exists." >> $LOGFILE
+  exit 1
+fi
+
+# Write pid to lockfile.
+echo $$ > ${LOCKFILE}
+
+# Check if the highest numbered daily backup exist and delete it
+if [ -d "${BACKUP_DIR}/daily.${KEEP_DAILY}" ]; then
+  echo "$(date): Expire oldest daily backup: ${BACKUP_DIR}/daily.${KEEP_DAILY}" >> $LOGFILE
+  /bin/rm -rf ${BACKUP_DIR}/daily.${KEEP_DAILY} >> $LOGFILE
+fi
+
+# Rename all daily backups to N+1
+for i in $(seq ${KEEP_DAILY} -1 0); do
+  if [ -d "${BACKUP_DIR}/daily.${i}" ]; then
+    new=$((${i} + 1))
+    echo "$(date): Rename daily backup ${i} to ${new}" >> $LOGFILE
+    /bin/mv -f "${BACKUP_DIR}/daily.${i}" "${BACKUP_DIR}/daily.${new}" >> $LOGFILE
+  fi
+done
+
+# Create new daily backup
+echo "$(date): Creating daily backup in ${BACKUP_DIR}/daily.0" >> $LOGFILE
+mkdir -p "${BACKUP_DIR}/daily.0"
+$BACKUP_BIN "${BACKUP_DIR}/daily.0" --user=${MYSQL_USER} --pass=${MYSQL_PASS} >> $LOGFILE
+
+# Tar it up
+echo "$(date): Creating archive of daily backup in ${BACKUP_DIR}/daily.${year}${month}${day}.tar.bz2" >> $LOGFILE
+/bin/tar -cjf "${BACKUP_DIR}/daily.${year}${month}${day}.tar.bz2" "${BACKUP_DIR}/daily.0" >> $LOGFILE
+
+
+# Log End Time
+echo "$(date): END OF SCRIPT" >> $LOGFILE
+
+# Call rotation script
+bash /backup/mysql/scripts/mysql-bin-bkup-rotate.sh
+ 
+# /endif daily backup
+
+# Remove lockfile.
+/bin/rm -f ${LOCKFILE}

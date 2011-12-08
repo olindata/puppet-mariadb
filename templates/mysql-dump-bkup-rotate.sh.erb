@@ -1,0 +1,139 @@
+#!/bin/bash
+
+
+# Backup Date
+BKUP_DATE=`date +%Y%m%d`
+
+# Binary Backup Base Dir, File and Log file
+MYSQL_BKUP_BASE="<%= scope.lookupvar('mysql-backup-dir') %>/mysqldumps"
+REMOTE_BKUP="$MYSQL_BKUP_BASE/dbdumps-$BKUP_DATE"
+LOG_DIR="$MYSQL_BKUP_BASE/dumpbkup-rotate-logs"
+mkdir -p $LOG_DIR
+LOG="$LOG_DIR/rotate_log_$BKUP_DATE.log"
+
+# Log Start Time 
+echo "$(date): START OF SCRIPT" >> $LOG
+
+# Remote Backup Server
+SFTP_SRV="<%= scope.lookupvar('mysql-backup-sftp-ip') %>"
+
+# Transfer backup to Remote Server
+echo "Creating dbdumps-$BKUP_DATE on $SFTP_SRV for today's backups" >> $LOG
+echo "mkdir dbdumps-$BKUP_DATE" | sftp $SFTP_SRV:/ >> $LOG 2>&1
+
+echo "Transferring $BKUP_DATE 's backup on to Remote Location..." >> $LOG
+cd $REMOTE_BKUP
+echo "mput *.gz" | sftp $SFTP_SRV:/ >> $LOG 2>&1
+
+
+# Do not Enable the below Code Yet
+
+## Params for Weekends sftp rotate
+#SFTP_KEEP_WEEKEND=`date --date="Last Sunday" +%Y%m%d`
+#SFTP_DEL_WEEKEND4=`date --date="Last Sunday -28 day" +%Y%m%d`
+#
+## Params for 3 months sftp rotate
+#LAST_MONTH3=`date --date="-4 Month" +%m`
+#LAST_MONTH3_YR=`date --date="-4 Month" +%Y`
+#LAST_MONTH3_LASTWEEK=`cal $LAST_MONTH3 $LAST_MONTH3_YR | tail -2`
+#LAST_MONTH3_END=`for i in $LAST_MONTH3_LASTWEEK ; do echo $i; done | tail -1`
+#SFTP_DEL_MONTH3=$LAST_MONTH3_YR$LAST_MONTH3$LAST_MONTH3_END
+#
+## Params for Last month end sftp rotate
+#LAST_MONTH1=`date --date="-1 Month" +%m`
+#LAST_MONTH1_YR=`date --date="-1 Month" +%Y`
+#LAST_MONTH1_LASTWEEK=`cal $LAST_MONTH1 $LAST_MONTH1_YR | tail -2`
+#LAST_MONTH1_END=`for i in $LAST_MONTH1_LASTWEEK ; do echo $i; done | tail -1`
+#SFTP_KEEP_MONTH1=$LAST_MONTH1_YR$LAST_MONTH1$LAST_MONTH1_END
+#
+#
+## Params for log rotation
+#BKUP_LOG_ROT_DT=`date --date="-31 Days" +%Y_%m_%d`
+#BKUP_LOG_ROT_FILE="${MYSQL_BKUP_BASE}/${BKUP_LOG_ROT_DT}_log.txt"
+#
+#
+#BKUP_ROT_LOG_ROT_DT=`date --date="-31 Days" +%Y%m%d`
+#BKUP_ROT_LOG_ROT_FILE="${LOG_DIR}/rotate_log_${BKUP_ROT_LOG_ROT_DT}.log"
+#
+## Rotate Remote Backup
+##
+#ROTATE_DAYS="7"
+#ROTATE_DATE=`date --date="-$ROTATE_DAYS day" +%Y%m%d`
+#REMOTE_BKUP_7="$MYSQL_BKUP_BASE/daily.$ROTATE_DATE.tar.bz2"
+#REMOTE_BKUP_28="$MYSQL_BKUP_BASE/daily.$SFTP_DEL_WEEKEND4.tar.bz2"
+#REMOTE_BKUP_90="$MYSQL_BKUP_BASE/daily.$SFTP_DEL_MONTH3.tar.bz2"
+#
+#echo " " >> $LOG 
+#echo "Starting SFTP File rotation" >> $LOG 
+#echo " " >> $LOG 
+#
+#
+## 7th Day but not last 4 weekends or 3 month ends
+#
+#if [ "$ROTATE_DATE" -ne "$SFTP_KEEP_WEEKEND" ] && [ "$ROTATE_DATE" -ne "$SFTP_KEEP_MONTH1" ]
+#then
+#
+#	# Local backup rotation
+#	#
+#	echo "Starting Rotation on Local Server" >> $LOG
+#	echo " " >> $LOG
+#
+#        echo "Removing 7th day old local backup....$REMOTE_BKUP_7" >> $LOG 
+#        /bin/rm $REMOTE_BKUP_7 >> $LOG 2>&1
+#        echo " " >> $LOG 
+#
+#        echo "Removing 5th week old local backup....$REMOTE_BKUP_28" >> $LOG 
+#        /bin/rm $REMOTE_BKUP_28 >> $LOG 2>&1
+#        echo " " >> $LOG 
+#
+#        echo "Removing 4th month old local backup....$REMOTE_BKUP_90" >> $LOG 
+#        /bin/rm $REMOTE_BKUP_90 >> $LOG 2>&1
+#        echo " " >> $LOG 
+#
+#	echo "End of Rotation on Local Server" >> $LOG
+#	echo " " >> $LOG
+#
+#	echo " " >> $LOG
+#
+#
+#	# Remote backup rotation
+#	#
+#	echo "Starting Rotation on Remote Server" >> $LOG
+#	echo " " >> $LOG
+#
+#        echo "Removing 7th day old backup....daily.$ROTATE_DATE.tar.bz2" >> $LOG 
+#        echo "rm daily.$ROTATE_DATE.tar.bz2" | sftp $SFTP_SRV:/ >> $LOG 2>&1
+#        echo " " >> $LOG 
+#
+#        echo "Removing 5th week old backup....daily.$SFTP_DEL_WEEKEND4.tar.bz2" >> $LOG 
+#        echo "rm daily.$SFTP_DEL_WEEKEND4.tar.bz2" | sftp $SFTP_SRV:/ >> $LOG 2>&1
+#        echo " " >> $LOG 
+#
+#        echo "Removing 4th month old backup....daily.$SFTP_DEL_MONTH3.tar.bz2" >> $LOG 
+#        echo "rm daily.$SFTP_DEL_MONTH3.tar.bz2" | sftp $SFTP_SRV:/ >> $LOG 2>&1
+#        echo " " >> $LOG 
+#
+#	echo "End of Rotation on Remote Server" >> $LOG
+#	echo " " >> $LOG
+#
+#else
+#        echo "Not rotating backup files on sftp: Rotate date is either in last 4 weekends or last 3 month ends" >> $LOG 
+#fi
+#
+#
+## Purge Old Logs
+#echo "" >> $LOG
+#echo "Rotating 31 day old backup log file $BKUP_LOG_ROT_FILE" >> $LOG
+#rm $BKUP_LOG_ROT_FILE
+#
+#echo "" >> $LOG
+#echo "Rotating 31 day old backup rotate log file $BKUP_ROT_LOG_ROT_FILE" >> $LOG
+#rm $BKUP_ROT_LOG_ROT_FILE
+
+
+# Log End Time 
+echo "$(date): END OF SCRIPT" >> $LOG
+
+
+# Send Report
+mail -s "Tribily: Mysql Backup Rotation Report for $BKUP_DATE" root < $LOG
