@@ -1,15 +1,18 @@
 class mariadb::server inherits mariadb::client {
 
+  require apt::repo::mariadb 
+  require mariadb::params
+
   # make sure the proper 5.1 packages are installed
-  package { "mariadb-server":  
-    ensure => "present" 
+  package { $mariadb::params::packagename_server:  
+    ensure  => "present"     
   }
 
   # make sure the mysql user and group exist
   group { "mysql": 
     ensure    => "present",
-    gid      => $::mysql-gid,
-    require    => Package["mariadb-server"],
+    gid       => $mariadb::params::user_gid,
+    require   => Package["mariadb-server"],
   }
 
   # data directory at /mysql/data, so
@@ -26,20 +29,19 @@ class mariadb::server inherits mariadb::client {
   # this in a subclass.
   file { "/etc/mysql/my.cnf":  
     require   =>  Package["mariadb-server"], 
-    source     =>  ["puppet:///mariadb/my.cnf.${::hostname}",
-             "puppet:///mariadb/my.cnf"]
+    source    =>  $mariadb::params::my_cnf,
   }
-  file { "/etc/mysql/common.cnf":  
+  file { "/etc/mysql/conf.d/common.cnf":  
     require   =>  Package["mariadb-server"], 
     source     =>  ["puppet:///mariadb/common.cnf"]
   }
 
-  file { "/etc/mysql/binlog.cnf":  
+  file { "/etc/mysql/conf.d/binlog.cnf":  
     require   =>  Package["mariadb-server"], 
     source     =>  ["puppet:///mariadb/binlog.cnf"]
   }
 
-  file { "/etc/mysql/debian.cnf":  
+  file { "/etc/mysql/conf.d/debian.cnf":  
     require   =>  Package["mariadb-server"], 
     content     =>  template("mariadb/debian.cnf.erb"),
                 owner           => root,
@@ -49,10 +51,10 @@ class mariadb::server inherits mariadb::client {
 
   user { "mysql": 
     ensure    => "present",
-    uid      => $::mysql-gid,
-    gid      => $::mysql-gid,
+    uid      => $mariadb::params::user_gid,
+    gid      => $mariadb::params::user_gid,
     comment    => "MariaDB Server",
-    home    => $::mysql-data-dir,
+    home    => $mariadb::params::data_dir,
     shell    => "/bin/bash",
     require    => [
             Package["mariadb-server"], 
@@ -69,7 +71,7 @@ class mariadb::server inherits mariadb::client {
     hasstatus  => true,
     require    => [
             File["/etc/mysql/my.cnf"], 
-            File[$::mysql-data-dir], 
+            File[$mariadb::params::data_dir], 
             Package["mariadb-server"] 
             ],
   }
@@ -78,7 +80,7 @@ class mariadb::server inherits mariadb::client {
   exec { "Set MySQL server root password":
     subscribe   => Package["mariadb-server"],
     refreshonly => true,
-    unless      => "/usr/bin/mysqladmin -uroot -p${::mysql_root_password} status",
-    command     => "/usr/bin/mysqladmin -uroot password ${::mysql_root_password}",
+    unless      => "/usr/bin/mysqladmin -uroot -p${mariadb::params::root_password} status",
+    command     => "/usr/bin/mysqladmin -uroot password ${mariadb::params::root_password}",
   }
 }

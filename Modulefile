@@ -29,3 +29,4 @@ $::mysql-backup-sftp-ip	=> The ip address to an sftp server that remote backups 
 $::mysql-backup-user	=> The credentials to a mysql user that will do mysqldump backups
 $::mysql-backup-pass	=> The credentials to a mysql user that will do mysqldump backups'
 dependency 'tribily/xtrabackup', '>=1.0'
+dependency 'tribily/apt', '>=1.0'

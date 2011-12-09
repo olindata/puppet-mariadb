@@ -1,15 +1,15 @@
 class mariadb::backup::generic {
-  file {$::mysql-backup-dir:
+  file {$mariadb::params::backup_dir:
     ensure   => "directory",
     owner  => root,
     group   => root,
   }
 
-  file {"${::mysql-backup-dir}/scripts":
+  file {"${mariadb::params::backup_dir}/scripts":
     ensure  => "directory",
     owner  => root,
     group  => root,
-    require  => File[$::mysql-backup-dir]
+    require  => File[$mariadb::params::backup_dir]
   }
   
 }

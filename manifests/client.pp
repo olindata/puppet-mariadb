@@ -1,7 +1,9 @@
 class mariadb::client {
   
-  package { "mariadb-client":  
-    ensure => "present" 
+  require apt::repo::mariadb
+  
+  package { $mariadb::params::packagename_client:  
+    ensure  => "present",
   }
 }
 

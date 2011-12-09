@@ -8,28 +8,33 @@
   "summary": "This module manages mariadb",
   "version": "1.0",
   "checksums": {
-    "Modulefile": "b131864c139a19438a673071fce84dc3",
+    "Modulefile": "36072fd9490d0de985ead7a034e25ad3",
     "README": "d1895524af06e7382823b6989ca767de",
     "files/binlog.cnf": "38159cf054807da4f642ff19a13d0505",
     "files/common.cnf": "cec350efb3e19d36ea134b229305318f",
     "files/my.cnf": "9ec531268457c651dc60dc64319e9ddc",
     "manifests/backup/binary.pp": "d369014a369f85e54669c88f34537301",
     "manifests/backup/dump.pp": "ac0afa4f3154c46346e6689605ced46f",
-    "manifests/backup/generic.pp": "23868324aa3046a7853e780f8fbbee46",
-    "manifests/client.pp": "219321c68ed42680e51d3b2b01914418",
-    "manifests/database.pp": "c21dec6f7e968125f81cfb32e9428428",
-    "manifests/server.pp": "7e43436e27f64f5964213e12cfdfa9c5",
-    "manifests/user.pp": "9ee675c37416e45d9a00481640c1bbd6",
-    "templates/debian.cnf.erb": "189625595f7e90f010fc98845d3d8902",
-    "templates/mysql-bin-bkup-rotate.sh.erb": "7feac6d6a2f84d7912db5af15583d99e",
-    "templates/mysql-binary-backup.sh.erb": "acdefbb5ef6b933ddc3a6482e8c8c4de",
+    "manifests/backup/generic.pp": "61e9c880d7395ffb66e1f54a299b4cd1",
+    "manifests/client.pp": "8b44e9f9a6cec598049af31e1b583c68",
+    "manifests/database.pp": "3be8c2a971ac8cb5adf80b7ff56fc2cf",
+    "manifests/params.pp": "3008cb75eb98c8ccc097a7d8c795d030",
+    "manifests/server.pp": "3a4a67e19d43a689caaf28aec5b225f1",
+    "manifests/user.pp": "ace98fffd4018c8fb2909d44f60ec163",
+    "templates/debian.cnf.erb": "2a1868a2423d7ad97caa8633a7b9ccab",
+    "templates/mysql-bin-bkup-rotate.sh.erb": "edf8a99d0ee5f55728de73de23053c8b",
+    "templates/mysql-binary-backup.sh.erb": "8865fc045c8b2301aaa5265155a0355a",
     "templates/mysql-dump-backup.sh.erb": "2420540a44aad0ca4f64d94bcfcdd2b9",
-    "templates/mysql-dump-bkup-rotate.sh.erb": "51fdc6230c517e1f379d8cee2a09cc7b",
-    "templates/mysql_backup.conf.erb": "104123000f7fac2e1022af2763af90cd"
+    "templates/mysql-dump-bkup-rotate.sh.erb": "ab161719e0967e0b071c5a86c6df0dc1",
+    "templates/mysql_backup.conf.erb": "771addc5b88e98a62a5cd70d1000456d"
   },
   "dependencies": [
     {
       "name": "tribily/xtrabackup",
+      "versionRequirement": "\u003e\u003d1.0"
+    },
+    {
+      "name": "tribily/apt",
       "versionRequirement": "\u003e\u003d1.0"
     }
   ]

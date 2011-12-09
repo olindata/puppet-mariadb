@@ -5,7 +5,7 @@
 BKUP_DATE=`date +%Y%m%d`
 
 # Binary Backup Base Dir, File and Log file
-MYSQL_BKUP_BASE="<%= scope.lookupvar('mysql-backup-dir') %>"
+MYSQL_BKUP_BASE="<%= scope.lookupvar('mariadb::params::backup_dir') %>"
 REMOTE_BKUP="$MYSQL_BKUP_BASE/daily.$BKUP_DATE.tar.bz2"
 LOG_DIR="$MYSQL_BKUP_BASE/binbkup-rotate-logs"
 mkdir -p $LOG_DIR
@@ -15,7 +15,7 @@ LOG="$LOG_DIR/rotate_log_$BKUP_DATE.log"
 echo "$(date): START OF SCRIPT" >> $LOG
 
 # Remote Backup Server
-SFTP_SRV="<%= scope.lookupvar('mysql-backup-sftp-ip') %>"
+SFTP_SRV="<%= scope.lookupvar('mariadb::params::backup_remote_ip') %>"
 
 # Transfer backup to Remote Server
 echo "Transferring $BKUP_DATE 's backup on to Remote Location..." >> $LOG

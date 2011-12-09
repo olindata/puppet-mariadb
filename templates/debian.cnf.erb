@@ -11,11 +11,11 @@
 [client]
 host     = localhost
 user     = debian-sys-maint
-password = <%= scope.lookupvar('debian-sys-maint-pass') %>
+password = <%= scope.lookupvar('mariadb::params::debian_sys_maint_pass') %>
 socket   = /var/run/mysqld/mysqld.sock
 [mysql_upgrade]
 host     = localhost
 user     = debian-sys-maint
-password = <%= scope.lookupvar('debian-sys-maint-pass') %>
+password = <%= scope.lookupvar('mariadb::params::debian_sys_maint_pass') %>
 socket   = /var/run/mysqld/mysqld.sock
 basedir  = /usr

@@ -6,9 +6,9 @@
 # repository and check it out on the puppet server.          #
 ###########################################################
 
-MYSQL_HOST=<%= scope.lookupvar('mysql-backup-host-to-backup') %>
-MYSQL_USER=<%= scope.lookupvar('mysql-backup-user') %>
-MYSQL_PASS=<%= scope.lookupvar('mysql-backup-pass') %>
+MYSQL_HOST=<%= scope.lookupvar('mariadb::params::backup_host_ip') %>
+MYSQL_USER=<%= scope.lookupvar('mariadb::params::backup_user') %>
+MYSQL_PASS=<%= scope.lookupvar('mariadb::params::backup_pass') %>
 BKUP_DATE=`date +%Y%m%d`
-DUMP_DIR="<%= scope.lookupvar('mysql-backup-dir') %>/mysqldumps/dbdumps-${BKUP_DATE}"
+DUMP_DIR="<%= scope.lookupvar('mariadb::params::backup_dir') %>/mysqldumps/dbdumps-${BKUP_DATE}"
 TAR=`which tar`

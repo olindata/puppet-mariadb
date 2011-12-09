@@ -4,7 +4,7 @@
 # Configuration 
 #
 # Location for backups
-BACKUP_DIR=<%= scope.lookupvar('mysql-backup-dir') %>
+BACKUP_DIR=<%= scope.lookupvar('mariadb::params::backup_dir') %>
 
 # Number of hourly backups to keep.
 KEEP_HOURLY=24
@@ -22,9 +22,9 @@ ARCHIVE_BASE_NAME=latest.tar.bz2
 BACKUP_BIN=/usr/bin/innobackupex-1.5.1
 
 # Location of mysql data dir
-MYSQL_DATA_DIR=<%= scope.lookupvar('mysql-data-dir') %>
-MYSQL_USER=<%= scope.lookupvar('mysql-backup-user') %>
-MYSQL_PASS=<%= scope.lookupvar('mysql-backup-pass') %>
+MYSQL_DATA_DIR=<%= scope.lookupvar('mariadb::params::data_dir') %>
+MYSQL_USER=<%= scope.lookupvar('mariadb::params::backup_user') %>
+MYSQL_PASS=<%= scope.lookupvar('mariadb::params::backup_pass') %>
 
 #
 # No more editing!
