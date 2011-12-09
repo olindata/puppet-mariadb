@@ -1,4 +1,7 @@
 class mariadb::backup::generic {
+  
+  require mariadb::params
+  
   file {$mariadb::params::backup_dir:
     ensure   => "directory",
     owner  => root,

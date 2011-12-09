@@ -1,4 +1,6 @@
 class mariadb::backup::dump {
+  require mariadb::params
+  
   include mariadb::backup::generic
   
   file {"${mariadb::params::backup_dir}/mysqldumps":
