@@ -3,8 +3,10 @@
 # Usage: mysql::grant { "dbname": "username" }
 
 define mariadb::user($username, $pw, $dbname, $grants = 'all privileges', $host_to_grant = '%', $dbhost = 'localhost', $withgrants = false) {
-
-    Exec { path => "/bin:/usr/bin" }
+  
+  require mariadb::params
+  
+  Exec { path => "/bin:/usr/bin" }
 
   if $withgrants {
       exec { "create-grant-${name}-${username}-${dbhost}":

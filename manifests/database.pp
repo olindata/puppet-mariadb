@@ -2,6 +2,8 @@
 
 define mariadb::database($username, $password, $database, $grants = 'all privileges', $grant_to_host = '%', $withgrants = false, $dbserver = 'localhost') {
   
+  require mariadb::params
+  
   exec { "create-db-${name}-${database}":
         command => "/usr/bin/mysqladmin create -h${dbserver} -u${mariadb::params::admin_user} -p${mariadb::params::admin_pass} ${database}",
         unless  => "/usr/bin/mysql -h${dbserver} -u${mariadb::params::admin_user} -p${mariadb::params::admin_user} -e'select schema_name from information_schema.schemata where schema_name = \"${database}\";' | grep ${database}"

@@ -1,7 +1,7 @@
 class mariadb::backup::dump {
   include mariadb::backup::generic
   
-  file {"${::mysql-backup-dir}/mysqldumps":
+  file {"${mariadb::params::backup_dir}/mysqldumps":
     ensure   => "directory",
     owner  => root,
     group   => root,
@@ -21,33 +21,33 @@ class mariadb::backup::dump {
           ]
   }
 
-  file {"${::mysql-backup-dir}/scripts/mysql-dump-backup.sh":
+  file {"${mariadb::params::backup_dir}/scripts/mysql-dump-backup.sh":
     ensure  => "present",
     content   =>  template("mariadb/mysql-dump-backup.sh.erb"),
     owner  => root,
     group   => root,
     mode  => 500,
     require => [
-          File["${::mysql-backup-dir}/scripts"], 
-          File["${::mysql-backup-dir}/mysqldumps"], 
+          File["${mariadb::params::backup_dir}/scripts"], 
+          File["${mariadb::params::backup_dir}/mysqldumps"], 
           Package["mariadb-client"]
           ]
   }
 
-     file {"${::mysql-backup-dir}/scripts/mysql-dump-bkup-rotate.sh":
+     file {"${mariadb::params::backup_dir}/scripts/mysql-dump-bkup-rotate.sh":
                 ensure  => "present",
                 content =>  template("mariadb/mysql-dump-bkup-rotate.sh.erb"),
                 owner   => root,
                 group   => root,
                 mode    => 500, 
                 require => [
-                                        File["${::mysql-backup-dir}/scripts/mysql-dump-backup.sh"]
+                                        File[${mariadb::params::backup_dir}]
                                         ]       
         }       
 
 
   cron { "mysql-sqldump-backup":
-    command => "${::mysql-backup-dir}/scripts/mysql-dump-backup.sh",
+    command => "$${mariadb::params::backup_dir}/scripts/mysql-dump-backup.sh",
     user => root,
     hour => 04,
     minute  => 17
