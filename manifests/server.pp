@@ -17,7 +17,7 @@ class mariadb::server inherits mariadb::client {
 
   # data directory at /mysql/data, so
   # make sure that those directories exist
-  file { ["/var/lib/mysql", "/var/log/mysql", "/var/run/mysqld"]: 
+  file { [$mariadb::params::data_dir, $mariadb::params::log_dir, "/var/run/mysqld"]: 
     ensure     => "directory",
     owner    => "mysql",
     group     => "mysql" 
@@ -30,15 +30,21 @@ class mariadb::server inherits mariadb::client {
   file { "/etc/mysql/my.cnf":  
     require   =>  Package["mariadb-server"], 
     source    =>  $mariadb::params::my_cnf,
+    owner    => "mysql",
+    group     => "mysql" 
   }
   file { "/etc/mysql/conf.d/common.cnf":  
     require   =>  Package["mariadb-server"], 
-    source     =>  ["puppet:///mariadb/common.cnf"]
+    source     =>  ["puppet:///mariadb/common.cnf"],
+    owner    => "mysql",
+    group     => "mysql" 
   }
 
   file { "/etc/mysql/conf.d/binlog.cnf":  
     require   =>  Package["mariadb-server"], 
-    source     =>  ["puppet:///mariadb/binlog.cnf"]
+    source     =>  ["puppet:///mariadb/binlog.cnf"],
+    owner    => "mysql",
+    group     => "mysql" 
   }
 
   file { "/etc/mysql/conf.d/debian.cnf":  
