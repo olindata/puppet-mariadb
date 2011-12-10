@@ -29,7 +29,7 @@ class mariadb::server inherits mariadb::client {
   # this in a subclass.
   file { "/etc/mysql/my.cnf":  
     require   =>  Package["mariadb-server"], 
-    source    =>  $mariadb::params::my_cnf,
+    source    =>  $mariadb::params::my_cnf_source,
     owner    => "mysql",
     group     => "mysql" 
   }

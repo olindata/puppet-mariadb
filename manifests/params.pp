@@ -36,7 +36,7 @@ class mariadb::params  {
 
   ## The userid/groupid of the mysql user/group
   $user_gid = $::mariadb_user_gid ? {
-    ''      => 111,
+    ''      => 107,
     default => "${::mariadb_user_gid}",
   }
 
@@ -48,9 +48,9 @@ class mariadb::params  {
   }
 
   ## The main config file for mysql
-  $my_cnf = $::mariadb_my_cnf ? {
+  $my_cnf_source = $::mariadb_my_cnf_source ? {
     ''      => ["puppet:///mariadb/my.cnf.${::hostname}","puppet:///mariadb/my.cnf"],
-    default => [$::mariadb_my_cnf,"puppet:///mariadb/my.cnf.${::hostname}","puppet:///mariadb/my.cnf"],
+    default => [$::mariadb_my_cnf_source,"puppet:///mariadb/my.cnf.${::hostname}","puppet:///mariadb/my.cnf"],
   }
 
   ## The directory where mysql log files are stored
@@ -107,7 +107,7 @@ class mariadb::params  {
         default => "mariadb-server",
     }
     $packagename_client = $::operatingsystem ? {
-        default => "mariadb-server",
+        default => "mariadb-client",
     }
 
     $servicename = $::operatingsystem ? {
