@@ -12,7 +12,7 @@ class mariadb::backup::binary {
     mode  => 500,
     require => [
           File["${mariadb::params::backup_dir}/scripts"], 
-          Package["mariadb-server"]
+          Package["mariadb-client"]
           ]
   }
 
