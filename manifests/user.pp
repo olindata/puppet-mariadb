@@ -1,6 +1,6 @@
-# Grant an existing account permissions to a database
+# Grant a mysql user permissions to a database
 #
-# Usage: mysql::grant { "dbname": "username" }
+# Usage: mariadb::user { "dbname": "username" }
 
 define mariadb::user($username, $pw, $dbname, $grants = 'all privileges', $host_to_grant = '%', $dbhost = 'localhost', $withgrants = false) {
   
