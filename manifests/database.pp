@@ -1,4 +1,4 @@
-# Creates an account and database and grant permissions for the database to the account
+  # Creates an account and database and grant permissions for the database to the account
 
 define mariadb::database($username, $password, $database, $grants = 'all privileges', $grant_to_host = '%', $withgrants = false, $dbserver = 'localhost') {
   
