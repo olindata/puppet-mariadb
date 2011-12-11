@@ -21,7 +21,7 @@ class mariadb::backup::dump {
       File["${mariadb::params::backup_dir}"], 
       File["${mariadb::params::backup_dir}/scripts"], 
       File["${mariadb::params::backup_dir}/mysqldumps"], 
-      Package["mariadb-server"]
+      Package["mariadb-client"]
     ]
   }
 
