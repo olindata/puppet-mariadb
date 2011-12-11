@@ -45,7 +45,7 @@ syslog "Completed database dump run"
 syslog "Starting dump compression run"
 
 # Do a compression run.
-#
+# Note: do not compress the archive as a whole so it is easier to retrieve individual backups
 for db in ${DATABASES}; do
         # If the database dump exists, compress it.
         #
@@ -60,9 +60,6 @@ for db in ${DATABASES}; do
         echo " ok."
 done
 
-# Do a Full directory compression
-# Do not required re-compression. Checked with Walter - Nov 15
-#$TAR -cjf "${DUMP_DIR}.tar.bz2" "${DUMP_DIR}" > /dev/null 2>&1
 	
 
 syslog "Completed dump compression run"

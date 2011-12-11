@@ -6,7 +6,7 @@
 # repository and check it out on the puppet server.          #
 ###########################################################
 
-MYSQL_HOST=<%= scope.lookupvar('mariadb::params::backup_host_ip') %>
+MYSQL_HOST=<%= scope.lookupvar('mariadb::params::dump_backup_host_ip') %>
 MYSQL_USER=<%= scope.lookupvar('mariadb::params::backup_user') %>
 MYSQL_PASS=<%= scope.lookupvar('mariadb::params::backup_pass') %>
 BKUP_DATE=`date +%Y%m%d`

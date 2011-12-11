@@ -15,7 +15,7 @@ LOG="$LOG_DIR/rotate_log_$BKUP_DATE.log"
 echo "$(date): START OF SCRIPT" >> $LOG
 
 # Remote Backup Server
-SFTP_SRV="<%= scope.lookupvar('mariadb::params::backup_remote_ip') %>"
+SFTP_SRV="<%= scope.lookupvar('mariadb::params::dump_backup_remote_ip') %>"
 
 # Transfer backup to Remote Server
 echo "Creating dbdumps-$BKUP_DATE on $SFTP_SRV for today's backups" >> $LOG
