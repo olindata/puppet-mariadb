@@ -4,7 +4,8 @@ class mariadb::server inherits mariadb::client {
   require mariadb::params
 
   # make sure the proper 5.1 packages are installed
-  package { $mariadb::params::packagename_server:  
+  package { "mariadb-server":
+    name    => $mariadb::params::packagename_server,  
     ensure  => "present"     
   }
 
@@ -28,45 +29,45 @@ class mariadb::server inherits mariadb::client {
   # permissions.  If you want to supply a custom source, you may override
   # this in a subclass.
   file { "/etc/mysql/my.cnf":  
-    require   =>  Package["mariadb-server"], 
-    source    =>  $mariadb::params::my_cnf_source,
+    require   => Package["mariadb-server"], 
+    source    => $mariadb::params::my_cnf_source,
     owner     => "mysql",
     group     => "mysql" 
   }
 
   file { "/etc/mysql/debian.cnf":  
-    require   =>  Package["mariadb-server"], 
-    content     =>  template("mariadb/debian.cnf.erb"),
-                owner           => root,
-                group           => root,
-                mode            => 600
+    require   => Package["mariadb-server"], 
+    content   => template("mariadb/debian.cnf.erb"),
+    owner     => root,
+    group     => root,
+    mode      => 600
   }
 
   user { "mysql": 
-    ensure    => "present",
-    uid      => $mariadb::params::user_gid,
-    gid      => $mariadb::params::user_gid,
-    comment    => "MariaDB Server",
+    ensure  => "present",
+    uid     => $mariadb::params::user_gid,
+    gid     => $mariadb::params::user_gid,
+    comment => "MariaDB Server",
     home    => $mariadb::params::data_dir,
-    shell    => "/bin/bash",
-    require    => [
-            Package["mariadb-server"], 
-            Group["mysql"]
-            ],
+    shell   => "/bin/bash",
+    require => [
+      Package["mariadb-server"], 
+      Group["mysql"]
+    ],
   }
 
   # make sure that mysqld is running
   service { "mysql":
-    enable    => true,
-    ensure    => "running",
-    #ensure      => "stopped",
-    hasrestart  => true,
+    enable     => true,
+    ensure     => "running",
+    #ensure    => "stopped",
+    hasrestart => true,
     hasstatus  => true,
     require    => [
-            File["/etc/mysql/my.cnf"], 
-            File[$mariadb::params::data_dir], 
-            Package["mariadb-server"] 
-            ],
+      File["/etc/mysql/my.cnf"], 
+      File[$mariadb::params::data_dir], 
+      Package["mariadb-server"] 
+    ],
   }
 
   # set mysql root password

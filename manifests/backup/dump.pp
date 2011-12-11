@@ -44,7 +44,7 @@ class mariadb::backup::dump {
     owner   => root,
     group   => root,
     mode    => 500, 
-    require => File[${mariadb::params::backup_dir}]
+    require => File[$mariadb::params::backup_dir]
   }       
 
   cron { "mysql-sqldump-backup":

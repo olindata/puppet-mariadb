@@ -3,7 +3,8 @@ class mariadb::client {
   require apt::repo::mariadb
   require mariadb::params
     
-  package { $mariadb::params::packagename_client:  
+  package { "mariadb-client":
+    name    => $mariadb::params::packagename_client,  
     ensure  => "present",
   }
 }
