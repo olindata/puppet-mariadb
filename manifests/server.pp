@@ -34,7 +34,7 @@ class mariadb::server inherits mariadb::client {
     group     => "mysql" 
   }
 
-  file { "/etc/mysql/conf.d/debian.cnf":  
+  file { "/etc/mysql/debian.cnf":  
     require   =>  Package["mariadb-server"], 
     content     =>  template("mariadb/debian.cnf.erb"),
                 owner           => root,
