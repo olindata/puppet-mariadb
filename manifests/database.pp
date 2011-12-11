@@ -5,9 +5,9 @@ define mariadb::database($username, $password, $database, $grants = 'all privile
   require mariadb::params
   
   exec { "create-db-${name}-${database}":
-        command => "/usr/bin/mysqladmin create -h${dbserver} -u${mariadb::params::admin_user} -p${mariadb::params::admin_pass} ${database}",
-        unless  => "/usr/bin/mysql -h${dbserver} -u${mariadb::params::admin_user} -p${mariadb::params::admin_user} -e'select schema_name from information_schema.schemata where schema_name = \"${database}\";' | grep ${database}"
-    }
+    command => "/usr/bin/mysqladmin create -h${dbserver} -u${mariadb::params::admin_user} -p${mariadb::params::admin_pass} ${database}",
+    unless  => "/usr/bin/mysql -h${dbserver} -u${mariadb::params::admin_user} -p${mariadb::params::admin_pass} -e'select schema_name from information_schema.schemata where schema_name = \"${database}\";' | grep ${database}"
+  }
 
   mariadb::user { "grant-mysql-${name}-${database}-${username}":
     username    => $username, 
@@ -18,5 +18,6 @@ define mariadb::database($username, $password, $database, $grants = 'all privile
     dbhost       => $dbserver, 
     withgrants     => $withgrants,
   }
+
 }
 
