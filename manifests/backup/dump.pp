@@ -48,7 +48,7 @@ class mariadb::backup::dump {
   }       
 
   cron { "mysql-sqldump-backup":
-    command => "$${mariadb::params::backup_dir}/scripts/mysql-dump-backup.sh",
+    command => "${mariadb::params::backup_dir}/scripts/mysql-dump-backup.sh",
     user    => root,
     hour    => 04,
     minute  => 17,
