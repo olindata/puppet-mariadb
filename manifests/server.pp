@@ -18,7 +18,19 @@ class mariadb::server inherits mariadb::client {
 
   # data directory at /mysql/data, so
   # make sure that those directories exist
-  file { [$mariadb::params::data_dir, $mariadb::params::log_dir, "/var/run/mysqld"]: 
+  file { $mariadb::params::data_dir: 
+    ensure    => "directory",
+    owner     => "mysql",
+    group     => "mysql" 
+  }
+    
+  file { $mariadb::params::log_dir:
+    ensure    => "directory",
+    owner     => "mysql",
+    group     => "mysql" 
+  }
+    
+  file { "/var/run/mysqld": 
     ensure    => "directory",
     owner     => "mysql",
     group     => "mysql" 
