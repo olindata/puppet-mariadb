@@ -26,8 +26,8 @@ class mariadb::server inherits mariadb::client {
 
   file { '/etc/mysql': 
     ensure    => 'directory',
-    owner     => 'mysql',
-    group     => 'mysql' 
+    owner     => 'root',
+    group     => 'root' 
   }
     
   file { $mariadb::params::log_dir:
@@ -40,15 +40,15 @@ class mariadb::server inherits mariadb::client {
     ensure    => 'present',
     owner     => 'mysql',
     group     => 'mysql',
-    mode      => '0666',
+    mode      => '0660',
     require   => File[$mariadb::params::log_dir]
   }
   
   file { "${mariadb::params::log_dir}/${$mariadb::params::log_slow_file_name}":
     ensure    => 'present',
     owner     => 'mysql',
-    group     => 'mysql', 
-    mode      => '0666',
+    group     => 'adm', 
+    mode      => '0640',
     require   => File[$mariadb::params::log_dir]
   }
   
