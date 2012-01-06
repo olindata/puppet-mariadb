@@ -15,11 +15,8 @@ LOG="$LOG_DIR/rotate_log_$BKUP_DATE.log"
 echo "$(date): START OF SCRIPT" >> $LOG
 
 # Remote Backup Server
-SFTP_SRV="<%= scope.lookupvar('mariadb::params::binary_backup_remote_ip') %>"
-
-# Transfer backup to Remote Server
-echo "Transferring $BKUP_DATE 's backup on to Remote Location..." >> $LOG
-echo "put $REMOTE_BKUP" | sftp $SFTP_SRV:/ >> $LOG 2>&1
+SFTP_SRV3="<%= scope.lookupvar('mariadb::params::binary_backup_remote_ip1') %>"
+SFTP_SRV1="<%= scope.lookupvar('mariadb::params::binary_backup_remote_ip2') %>"
 
 
 # Params for Weekends sftp rotate - Keep last 3 weekends and delete older
@@ -96,17 +93,35 @@ then
 	echo "Starting Rotation on Remote Server" >> $LOG
 	echo " " >> $LOG
 
+				# Search and rotate from BKP03
+				#
         echo "Removing backups older than 4 days....daily.$ROTATE_DATE.tar.bz2" >> $LOG 
-        echo "rm daily.$ROTATE_DATE.tar.bz2" | sftp $SFTP_SRV:/ >> $LOG 2>&1
+        echo "rm daily.$ROTATE_DATE.tar.bz2" | sftp $SFTP_SRV3:/ >> $LOG 2>&1
         echo " " >> $LOG 
 
         echo "Removing backups older than 2 weeks....daily.$SFTP_DEL_WEEKEND2.tar.bz2" >> $LOG 
-        echo "rm daily.$SFTP_DEL_WEEKEND2.tar.bz2" | sftp $SFTP_SRV:/ >> $LOG 2>&1
+        echo "rm daily.$SFTP_DEL_WEEKEND2.tar.bz2" | sftp $SFTP_SRV3:/ >> $LOG 2>&1
         echo " " >> $LOG 
 
         echo "Removing backups older than 2 months....daily.$SFTP_DEL_MONTH2.tar.bz2" >> $LOG 
-        echo "rm daily.$SFTP_DEL_MONTH2.tar.bz2" | sftp $SFTP_SRV:/ >> $LOG 2>&1
+        echo "rm daily.$SFTP_DEL_MONTH2.tar.bz2" | sftp $SFTP_SRV3:/ >> $LOG 2>&1
         echo " " >> $LOG 
+
+
+				# Search and rotate from BKP01
+				#
+        echo "Removing backups older than 4 days....daily.$ROTATE_DATE.tar.bz2" >> $LOG 
+        echo "rm daily.$ROTATE_DATE.tar.bz2" | sftp $SFTP_SRV1:/ >> $LOG 2>&1
+        echo " " >> $LOG 
+
+        echo "Removing backups older than 2 weeks....daily.$SFTP_DEL_WEEKEND2.tar.bz2" >> $LOG 
+        echo "rm daily.$SFTP_DEL_WEEKEND2.tar.bz2" | sftp $SFTP_SRV1:/ >> $LOG 2>&1
+        echo " " >> $LOG 
+
+        echo "Removing backups older than 2 months....daily.$SFTP_DEL_MONTH2.tar.bz2" >> $LOG 
+        echo "rm daily.$SFTP_DEL_MONTH2.tar.bz2" | sftp $SFTP_SRV1:/ >> $LOG 2>&1
+        echo " " >> $LOG 
+
 
 	echo "End of Rotation on Remote Server" >> $LOG
 	echo " " >> $LOG
@@ -114,6 +129,24 @@ then
 else
         echo "Not rotating backup files on sftp: Rotate date is either in last 2 weekends or last 2 month ends" >> $LOG 
 fi
+
+
+# Split Backups between BKP01 and BKP03
+#
+DOW=`date +%u`
+DOM_NEXT=`date +%d --date="tomorrow"`
+
+if [ "$DOW" -eq "7" ] || [ "$DOM_NEXT" -eq "01" ]
+then
+	# Transfer backup to Remote Server BKP01
+	echo "Transferring $BKUP_DATE 's backup on to Remote Location..." >> $LOG
+	echo "put $REMOTE_BKUP" | sftp $SFTP_SRV1:/ >> $LOG 2>&1
+else
+	# Transfer backup to Remote Server BKP03
+	echo "Transferring $BKUP_DATE 's backup on to Remote Location..." >> $LOG
+	echo "put $REMOTE_BKUP" | sftp $SFTP_SRV3:/ >> $LOG 2>&1
+fi	
+
 
 
 # Purge Old Logs
