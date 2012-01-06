@@ -58,6 +58,16 @@ class mariadb::params  {
     ''      => "/var/log/mysql",
     default => "${::mariadb_log_dir}",
   }
+  
+  $log_slow_file_name = $::mariadb_log_slow_file_name ? {
+    ''      => "mariadb-slow.log",
+    default => $::mariadb_log_slow_file_name,
+  }
+
+  $log_error_file_name = $::mariadb_log_error_file_name ? {
+    ''      => "mariadb-error.log",
+    default => $::mariadb_log_error_file_name,
+  }
 
   ## The directory where mysql backups are stored
   $backup_dir = $::mariadb_backup_dir ? {
