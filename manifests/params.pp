@@ -94,9 +94,15 @@ class mariadb::params  {
   }
  
   ## The ip address to an sftp server that remote backups are stored on
-  $binary_backup_remote_ip = $::mariadb_binary_backup_remote_ip ? {
+  $binary_backup_remote_ip1 = $::mariadb_binary_backup_remote_ip1 ? {
     ''      => "",
-    default => "${::mariadb_binary_backup_remote_ip}",
+    default => "${::mariadb_binary_backup_remote_ip1}",
+  }
+
+  ## The ip address to an sftp server that remote backups are stored on
+  $binary_backup_remote_ip2 = $::mariadb_binary_backup_remote_ip2 ? {
+    ''      => "",
+    default => "${::mariadb_binary_backup_remote_ip2}",
   }
 
   ## The credentials to a mysql user that will do mysqldump backups
