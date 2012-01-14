@@ -6,20 +6,14 @@
 # Location for backups
 BACKUP_DIR=<%= scope.lookupvar('mariadb::params::backup_dir') %>
 
-# Number of hourly backups to keep.
-KEEP_HOURLY=24
-
 # Number of daily backups to keep.
 KEEP_DAILY=2
-
-# Hour for full backup (00..23)
-FULL_BACKUP_HOUR=02
 
 # Name for teh archive
 ARCHIVE_BASE_NAME=latest.tar.bz2
 
 # Location of Xtrabackup binary
-BACKUP_BIN=/usr/bin/innobackupex-1.5.1
+BACKUP_BIN=/usr/bin/innobackupex
 
 # Location of mysql data dir
 MYSQL_DATA_DIR=<%= scope.lookupvar('mariadb::params::data_dir') %>
@@ -75,11 +69,11 @@ done
 # Create new daily backup
 echo "$(date): Creating daily backup in ${BACKUP_DIR}/daily.0" >> $LOGFILE
 mkdir -p "${BACKUP_DIR}/daily.0"
-$BACKUP_BIN "${BACKUP_DIR}/daily.0" --user=${MYSQL_USER} --pass=${MYSQL_PASS} >> $LOGFILE
+/usr/bin/ionice -c3 $BACKUP_BIN "${BACKUP_DIR}/daily.0" --user=${MYSQL_USER} --pass=${MYSQL_PASS} >> $LOGFILE
 
 # Tar it up
 echo "$(date): Creating archive of daily backup in ${BACKUP_DIR}/daily.${year}${month}${day}.tar.bz2" >> $LOGFILE
-/bin/tar -cjf "${BACKUP_DIR}/daily.${year}${month}${day}.tar.bz2" "${BACKUP_DIR}/daily.0" >> $LOGFILE
+/usr/bin/ionice -c3 /bin/tar -cjf "${BACKUP_DIR}/daily.${year}${month}${day}.tar.bz2" "${BACKUP_DIR}/daily.0" >> $LOGFILE
 
 
 # Log End Time
@@ -87,8 +81,6 @@ echo "$(date): END OF SCRIPT" >> $LOGFILE
 
 # Call rotation script
 bash /backup/mysql/scripts/mysql-bin-bkup-rotate.sh
- 
-# /endif daily backup
 
 # Remove lockfile.
 /bin/rm -f ${LOCKFILE}

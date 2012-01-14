@@ -51,11 +51,11 @@ for db in ${DATABASES}; do
         #
         echo -n "Compressing ${db}.sql";
         if [ -f "${DUMP_DIR}/${db}.sql" ]; then
-                /bin/gzip "${DUMP_DIR}/${db}.sql";
+                /usr/bin/ionice -c3 /bin/gzip "${DUMP_DIR}/${db}.sql";
         fi
         echo -n " ${db}.frm.sql";
         if [ -f "${DUMP_DIR}/${db}.frm.sql" ]; then
-                /bin/gzip "${DUMP_DIR}/${db}.frm.sql";
+                /usr/bin/ionice -c3 /bin/gzip "${DUMP_DIR}/${db}.frm.sql";
         fi
         echo " ok."
 done
