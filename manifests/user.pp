@@ -4,9 +4,7 @@
 
 define mariadb::user($username, $pw, $dbname, $grants = 'all privileges', $host_to_grant = '%', $dbhost = 'localhost', $withgrants = false) {
   
-  require mariadb::params
-  
-  Exec { path => "/bin:/usr/bin" }
+  include mariadb::params
 
   if $withgrants {
       exec { "create-grant-${name}-${username}-${dbhost}":
