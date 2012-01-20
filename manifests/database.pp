@@ -10,13 +10,13 @@ define mariadb::database($username, $password, $database, $grants = 'all privile
   }
 
   mariadb::user { "grant-mysql-${name}-${database}-${username}":
-    username    => $username, 
-    pw        => $password,
-    dbname      => $database, 
-    grants       => $grants, 
-    host_to_grant   => $grant_to_host, 
-    dbhost       => $dbserver, 
-    withgrants     => $withgrants,
+    username      => $username, 
+    pw            => $password,
+    dbname        => $database, 
+    grants        => $grants, 
+    host_to_grant => $grant_to_host, 
+    dbhost        => $dbserver, 
+    withgrants    => $withgrants,
   }
 
 }
