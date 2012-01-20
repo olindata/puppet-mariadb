@@ -11,20 +11,6 @@ class mariadb::backup::dump {
     require => File["${mariadb::params::backup_dir}"]
   }
 
-  file {"/etc/mysql_backup.conf":
-    ensure  => "present",
-    content => template("mariadb/mysql_backup.conf.erb"),
-    owner   => root,
-    group   => root,
-    mode    => 500,
-    require => [
-      File["${mariadb::params::backup_dir}"], 
-      File["${mariadb::params::backup_dir}/scripts"], 
-      File["${mariadb::params::backup_dir}/mysqldumps"], 
-      Package["mariadb-client"]
-    ]
-  }
-
   file {"${mariadb::params::backup_dir}/scripts/mysql-dump-backup.sh":
     ensure  => "present",
     content => template("mariadb/mysql-dump-backup.sh.erb"),

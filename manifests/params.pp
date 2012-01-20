@@ -111,11 +111,23 @@ class mariadb::params  {
     default => "${::mariadb_backup_user}",
   }
 
-#$::mysql-backup-pass  => The credentials to a mysql user that will do mysqldump backups    
+  #$::mysql-backup-pass  => The credentials to a mysql user that will do mysqldump backups    
   ## The credentials to a mysql user that will be able to create other users, databases and grants
   $backup_pass = $::mariadb_backup_pass ? {
     ''      => "root",
     default => "${::mariadb_backup_pass}",
+  }
+
+  ## The credentials to a mysql user that will do monitoring
+  $monitor_user = $::mariadb_monitor_user ? {
+    ''      => "root",
+    default => "${::mariadb_monitor_user}",
+  }
+
+  ## The credentials to a mysql user that will do monitoring
+  $monitor_pass = $::mariadb_monitor_pass ? {
+    ''      => "root",
+    default => "${::mariadb_monitor_pass}",
   }
 
 ## EXTRA MODULE INTERNAL VARIABLES

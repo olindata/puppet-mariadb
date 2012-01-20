@@ -12,3 +12,21 @@ MYSQL_PASS=<%= scope.lookupvar('mariadb::params::backup_pass') %>
 BKUP_DATE=`date +%Y%m%d`
 DUMP_DIR="<%= scope.lookupvar('mariadb::params::backup_dir') %>/mysqldumps/dbdumps-${BKUP_DATE}"
 TAR=`which tar`
+
+
+# Configuration 
+#
+# Location for backups
+BACKUP_DIR=<%= scope.lookupvar('mariadb::params::backup_dir') %>
+
+# Number of daily backups to keep.
+KEEP_DAILY=2
+
+# Name for teh archive
+ARCHIVE_BASE_NAME=latest.tar.bz2
+
+# Location of Xtrabackup binary
+BACKUP_BIN=/usr/bin/innobackupex
+
+# Location of mysql data dir
+MYSQL_DATA_DIR=<%= scope.lookupvar('mariadb::params::data_dir') %>
