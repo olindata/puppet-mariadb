@@ -3,6 +3,11 @@ class mariadb::server inherits mariadb::client {
   require apt::repo::mariadb 
   require mariadb::params
 
+  case $mariadb::params::monitoring {
+    'tribily': { include mariadb::monitoring::tribily }
+    false:     { notice "no monitoring for mariadb" }
+  }
+
   # make sure the proper 5.1 packages are installed
   package { 'mariadb-server':
     name    => $mariadb::params::packagename_server,  

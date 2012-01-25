@@ -130,6 +130,11 @@ class mariadb::params  {
     default => "${::mariadb_monitor_pass}",
   }
 
+  $monitoring = $::mariadb_monitoring ? {
+    ''      => 'false',
+    default => $::mariadb_monitoring
+  }
+
 ## EXTRA MODULE INTERNAL VARIABLES
 #(add here module specific internal variables)
 
