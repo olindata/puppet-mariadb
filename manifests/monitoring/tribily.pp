@@ -1,9 +1,7 @@
 class mariadb::monitoring::tribily {
   
   tribily::agent::userparams{ 'mariadb':
-    file_src => 'mariadb/monitoring/tribily.conf',
-    username      => $mariadb::params::monitor_user, 
-    password      => $mariadb::params::monitor_pass,
+    content       => template('mariadb/monitoring/tribily.conf'),
   }
   
   file { '/opt/tribily/bin/mysql_repl_status.pl':

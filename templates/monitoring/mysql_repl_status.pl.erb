@@ -27,8 +27,8 @@ if (@ARGV < 1  || @ARGV > 1) {
 #
 my $host = "localhost";
 my $port = "3306";
-my $user = "tribilyagent";
-my $pass = "1f0rgOtit";
+my $user = "<%= scope.lookupvar('mariadb::params::monitor_user') %>";
+my $pass = "<%= scope.lookupvar('mariadb::params::monitor_pass') %>";
 my $dsn = "dbi:mysql::$host:$port";
 #$ENV{DBI_AUTOPROXY} = "host=$host;port=$port";
 

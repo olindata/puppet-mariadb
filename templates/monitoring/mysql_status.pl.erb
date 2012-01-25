@@ -12,8 +12,8 @@
 
 $ZABBIX_CONFIG_FILE="/etc/zabbix/zabbix_agentd.conf";
 $MYSQL="/usr/bin/mysql";
-$MYSQL_USER="tribilyagent";
-$MYSQL_PASS="1f0rgOtit";
+$MYSQL_USER="<%= scope.lookupvar('mariadb::params::monitor_user') %>";
+$MYSQL_PASS="<%= scope.lookupvar('mariadb::params::monitor_pass') %>";
 $MYSQL_GLOBAL_VARIABLES="SHOW GLOBAL VARIABLES";
 $MYSQL_GLOBAL_STATUS="SHOW GLOBAL STATUS";
 $MYSQL_REPLICATION="SHOW SLAVE STATUS";
