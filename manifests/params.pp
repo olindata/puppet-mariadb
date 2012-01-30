@@ -17,13 +17,13 @@ class mariadb::params  {
   
   ## The credentials to a mysql user that will be able to create other users, databases and grants
   $admin_pass = $::mariadb_admin_pass ? {
-    ''      => "root",
+    ''      => "",
     default => "${::mariadb_admin_pass}",
   }
 
   ## The preferred root password
   $root_password = $::mariadb_root_password ? {
-    ''      => "root",
+    ''      => "",
     default => "${::mariadb_root_password}",
   }
 
