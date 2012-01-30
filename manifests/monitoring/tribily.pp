@@ -10,7 +10,7 @@ class mariadb::monitoring::tribily {
     username      => $mariadb::params::monitor_user, 
     pw            => $mariadb::params::monitor_pass,
     dbname        => '*', 
-    grants        => 'REPLICATION CLIENT', 
+    grants        => 'REPLICATION CLIENT,USAGE', 
     host_to_grant => 'localhost', 
     dbhost        => 'localhost', 
     withgrants    => false
