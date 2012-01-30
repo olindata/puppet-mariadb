@@ -19,19 +19,18 @@ define mariadb::user ($username, $pw, $dbname, $grants = 'all privileges',
   }
 
   if $withgrants {
-    exec { "create-grant-${name}-${username}-${dbhost}":
-      command => "/usr/bin/mysql -h${dbhost} -u${mariadb::params::admin_user} ${real_admin_pass} -e 'grant ${grants} on ${real_dbname} to `${username}`@`${host_to_grant}` identified by \"${pw}\" with grant option'",
-      path    => "/bin:/usr/bin",
-      onlyif  => "[ `/usr/bin/mysql -h${dbhost} -u${mariadb::params::admin_user} ${real_admin_pass} -BN -e 'select count(*) from mysql.db where User=\"${username}\" and Db=\"${real_dbname}\"'` -eq 0 ]",
-      require => Package['mariadb-client']
-    }
+    $grantoption = ' with grant option'
+    $isgrantable = 'YES'
   } else {
-    exec { "create-grant-${name}-${username}-${dbhost}":
-      command => "/usr/bin/mysql -h${dbhost} -u${mariadb::params::admin_user} ${real_admin_pass} -e 'grant ${grants} on ${real_dbname} to `${username}`@`${host_to_grant}` identified by \"${pw}\"'",
-      path    => "/bin:/usr/bin",
-      onlyif  => "[ `/usr/bin/mysql -h${dbhost} -u${mariadb::params::admin_user} ${real_admin_pass} -BN -e 'select count(*) from mysql.db where User=\"${username}\" and Db=\"${real_dbname}\"'` -eq 0 ]",
-      require => Package['mariadb-client']
-    }
+    $grantoption = ''
+    $isgrantable = 'NO'
+  }
+
+  exec { "create-grant-${name}-${username}-${dbhost}":
+    command => "/usr/bin/mysql -h${dbhost} -u${mariadb::params::admin_user} ${real_admin_pass} -e 'grant ${grants} on ${real_dbname} to `${username}`@`${host_to_grant}` identified by \"${pw}\" ${grantoption}'",
+    path    => "/bin:/usr/bin",
+    onlyif  => "[ `/usr/bin/mysql -h${dbhost} -u${mariadb::params::admin_user} ${real_admin_pass} -BN -e \"select count(*) from information_schema.USER_PRIVILEGES where GRANTEE=\\\"'${username}'@'${dbhost}'\\\" and PRIVILEGE_TYPE=\\\"${grants}\\\" and IS_GRANTABLE=\\\"${isgrantable}\\\"\"` -eq 0 ]",
+    require => Package['mariadb-client']
   }
 }
 
