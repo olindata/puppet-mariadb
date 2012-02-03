@@ -1,7 +1,7 @@
 class mariadb::backup::generic {
-  
+
   require mariadb::params
-  
+
   file {"/etc/mysql_backup.conf":
     ensure  => "present",
     content => template("mariadb/mysql_backup.conf.erb"),
@@ -9,15 +9,16 @@ class mariadb::backup::generic {
     group   => root,
     mode    => 500,
     require => [
-      File["${mariadb::params::backup_dir}/scripts"], 
+      File["${mariadb::params::backup_dir}/scripts"],
       Package["mariadb-client"]
     ]
   }
 
   file {$mariadb::params::backup_dir:
-    ensure => "directory",
-    owner  => root,
-    group  => root,
+    ensure  => "directory",
+    owner   => root,
+    group   => root,
+    recurse => true
   }
 
   file {"${mariadb::params::backup_dir}/scripts":
@@ -28,12 +29,12 @@ class mariadb::backup::generic {
   }
 
   mariadb::user{ 'backup':
-    username      => $mariadb::params::backup_user, 
+    username      => $mariadb::params::backup_user,
     pw            => $mariadb::params::backup_pass,
-    dbname        => '*', 
-    grants        => 'SELECT, RELOAD, SUPER, LOCK TABLES, REPLICATION CLIENT', 
-    host_to_grant => 'localhost', 
-    dbhost        => 'localhost', 
+    dbname        => '*',
+    grants        => 'SELECT, RELOAD, SUPER, LOCK TABLES, REPLICATION CLIENT',
+    host_to_grant => 'localhost',
+    dbhost        => 'localhost',
     withgrants    => false
   }
 
