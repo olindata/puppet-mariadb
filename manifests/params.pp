@@ -1,7 +1,7 @@
 # Class: mariadb::params
 #
 # Sets internal variables and defaults for mariadb module
-# This class is automatically loaded in all the classes that use the values set here 
+# This class is automatically loaded in all the classes that use the values set here
 #
 class mariadb::params  {
 
@@ -14,7 +14,7 @@ class mariadb::params  {
     ''      => "root",
     default => "${::mariadb_admin_user}",
   }
-  
+
   ## The credentials to a mysql user that will be able to create other users, databases and grants
   $admin_pass = $::mariadb_admin_pass ? {
     ''      => "",
@@ -58,7 +58,7 @@ class mariadb::params  {
     ''      => "/var/log/mysql",
     default => "${::mariadb_log_dir}",
   }
-  
+
   $log_slow_file_name = $::mariadb_log_slow_file_name ? {
     ''      => "mariadb-slow.log",
     default => $::mariadb_log_slow_file_name,
@@ -80,7 +80,7 @@ class mariadb::params  {
     ''      => "127.0.0.1",
     default => "${::mariadb_dump_backup_host_ip}",
   }
- 
+
   ## The ip address to an sftp server that remote backups are stored on
   $dump_backup_remote_ip = $::mariadb_dump_backup_remote_ip ? {
     ''      => "",
@@ -92,7 +92,7 @@ class mariadb::params  {
     ''      => "127.0.0.1",
     default => "${::mariadb_binary_backup_host_ip}",
   }
- 
+
   ## The ip address to an sftp server that remote backups are stored on
   $binary_backup_remote_ip1 = $::mariadb_binary_backup_remote_ip1 ? {
     ''      => "",
@@ -111,7 +111,7 @@ class mariadb::params  {
     default => "${::mariadb_backup_user}",
   }
 
-  #$::mysql-backup-pass  => The credentials to a mysql user that will do mysqldump backups    
+  #$::mysql-backup-pass  => The credentials to a mysql user that will do mysqldump backups
   ## The credentials to a mysql user that will be able to create other users, databases and grants
   $backup_pass = $::mariadb_backup_pass ? {
     ''      => "root",
@@ -131,7 +131,7 @@ class mariadb::params  {
   }
 
   $monitoring = $::mariadb_monitoring ? {
-    ''      => 'false',
+    ''      => false,
     default => $::mariadb_monitoring
   }
 
