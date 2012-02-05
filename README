@@ -1,3 +1,10 @@
 puppet-mariadb
 
 This is the puppet-mariadb module.
+
+
+
+BUGS:
+
+Changing permissions on a user may not correctly update the database.
+
