@@ -15,10 +15,17 @@ class mariadb::server inherits mariadb::client {
   }
 
   # make sure the mysql user and group exist
-  group { 'mysql': 
-    ensure    => "present",
-    gid       => $mariadb::params::user_gid,
-    require   => Package['mariadb-server'],
+  if $mariadb::params::user_gid {
+    group { 'mysql': 
+      ensure    => "present",
+      gid       => $mariadb::params::user_gid,
+      require   => Package['mariadb-server'],
+    }
+  } else {
+    group { 'mysql': 
+      ensure    => "present",
+      require   => Package['mariadb-server'],
+    }
   }
 
   # data directory at /mysql/data, so
@@ -84,24 +91,36 @@ class mariadb::server inherits mariadb::client {
     mode      => 600
   }
 
-  user { 'mysql': 
-    ensure  => "present",
-    uid     => $mariadb::params::user_gid,
-    gid     => $mariadb::params::user_gid,
-    comment => "MariaDB Server",
-    home    => $mariadb::params::data_dir,
-    shell   => "/bin/bash",
-    require => [
-      Package['mariadb-server'], 
-      Group['mysql']
-    ],
+  if $mariadb::params::user_gid {
+    user { 'mysql': 
+      ensure  => "present",
+      uid     => $mariadb::params::user_gid,
+      gid     => $mariadb::params::user_gid,
+      comment => "MariaDB Server",
+      home    => $mariadb::params::data_dir,
+      shell   => "/bin/bash",
+      require => [
+        Package['mariadb-server'], 
+        Group['mysql']
+      ],
+    }
+  } else {
+    user { 'mysql': 
+      ensure  => "present",
+      comment => "MariaDB Server",
+      home    => $mariadb::params::data_dir,
+      shell   => "/bin/bash",
+      require => [
+        Package['mariadb-server'], 
+        Group['mysql']
+      ],
+    }
   }
 
   # make sure that mysqld is running
   service { 'mysql':
     enable     => true,
     ensure     => 'running',
-    #ensure    => "stopped",
     hasrestart => true,
     hasstatus  => true,
     require    => [
