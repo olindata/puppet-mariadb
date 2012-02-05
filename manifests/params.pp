@@ -36,7 +36,7 @@ class mariadb::params  {
 
   ## The userid/groupid of the mysql user/group
   $user_gid = $::mariadb_user_gid ? {
-    ''      => 107,
+    ''      => "",
     default => "${::mariadb_user_gid}",
   }
 
