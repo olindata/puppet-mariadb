@@ -51,13 +51,13 @@ define mariadb::user ($username, $pw, $dbname, $grants = 'all privileges',
 
   #replace all spaces by underscores
   #$grants = 'INSERT, DELETE'
-  $grants_ = regsubst($grants, '\s*,\s*', "___,___${dbhost}__${dbname}__${username}__", 'G')
+  $grants_ = regsubst($grants, '\s*,\s*', "___,___${host_to_grant}__${dbname}__${username}__", 'G')
   #$grants_ = 'INSERT__,__DELETE'
-  $grants__ = "___${dbhost}__${dbname}__${username}__${grants_}___"
-  #$grants__ = "__localhost_zabbix_zabbixuser_INSERT__,__DELETE__
+  $grants__ = "___${host_to_grant}__${dbname}__${username}__${grants_}___"
+  #$grants__ = "__localhost_zabbix_zabbixuser_INSERT__,__localhost_zabbix_zabbixuser_DELETE__"
   # split the grants by comma into an array
   $grants_array = split($grants__,',')
-  #$grants_array =
+  #$grants_array = ["__localhost_zabbix_zabbixuser_INSERT__","__localhost_zabbix_zabbixuser_DELETE__"]
 
   # call dummy loop with the array in order to check/create all desired grants
   mariadb::user::dummyloop{ $grants_array:
