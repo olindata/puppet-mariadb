@@ -1,10 +1,10 @@
 name 'tribily-mariadb'
-version '1.0'
+version '1.3.2'
 
 author 'Walter Heck'
-license 'GPLv2'
-project_page ''
-source ''
+license 'Apache License, Version 2.0'
+project_page 'https://github.com/Tribily/puppet-mariadb'
+source 'git://github.com/Tribily/puppet-mariadb'
 summary 'This module manages mariadb'
 description 'Only works for debian for now, feel free to contribute other operating systems.
 
