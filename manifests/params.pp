@@ -49,8 +49,8 @@ class mariadb::params  {
 
   ## The main config file for mysql
   $my_cnf_source = $::mariadb_my_cnf_source ? {
-    ''      => ["puppet:///mariadb/my.cnf.${::hostname}","puppet:///mariadb/my.cnf"],
-    default => [$::mariadb_my_cnf_source,"puppet:///mariadb/my.cnf.${::hostname}","puppet:///mariadb/my.cnf"],
+    ''      => ["puppet:///modules/mariadb/my.cnf.${::hostname}","puppet:///modules/mariadb/my.cnf"],
+    default => [$::mariadb_my_cnf_source,"puppet:///modules/mariadb/my.cnf.${::hostname}","puppet:///modules/mariadb/my.cnf"],
   }
 
   ## The directory where mysql log files are stored
